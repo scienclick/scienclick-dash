@@ -1,0 +1,4 @@
+myDashEnv
+*.pyc
+.DS_Store
+.env

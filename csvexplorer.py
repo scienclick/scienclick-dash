@@ -11,10 +11,12 @@ import plotly.graph_objs as go
 app = dash.Dash()
 app.scripts.config.serve_locally = True
 app.config['suppress_callback_exceptions'] = True
+server=app.server
 
+width = '20%'
 app.layout = html.Div([
     # ----------------------------------------------------upload section
-    html.H5("Upload Files"),
+    html.H5("0. Upload Files"),
     dcc.Upload(
         id='upload-data',
         children=html.Div([
@@ -36,40 +38,130 @@ app.layout = html.Div([
     html.Br(),
     # -------------------------------table results section
     html.Br(),
-    html.H5("Updated Table"),
+    html.H5("1. Updated Table"),
     html.Div(dte.DataTable(rows=[{}], id='table')),
     # ----------------------------------------------------Histogram section
     html.Br(),
-    html.H5("Histogram Plot"),
-    dcc.Dropdown(id='histogram_dropdown_input',
-                 multi=False,
-                 placeholder='Select feature'),
+    html.H5("2. Histogram Plot"),
+    html.Div([dcc.Dropdown(id='2_histogram_dropdown_input',
+                           multi=False,
+                           placeholder='Select feature')],
+             style={'width': width, 'display': 'inline-block'}),
     dcc.Graph(id='figure_hist_id_output'),
-    # -----------------------------------------------------Plotting section
-    html.H5("X Y, Plotting"),
+    # -----------------------------------------------------Plotting section continous
+    html.H5("3. X Y, Continous Plotting"),
 
     html.Br(),
+    # ----------------------3- x,y,z
     html.Div([
         # -------------------------------x Drop down
         html.Div([
             dcc.Dropdown(
-                id='xaxis_id_input1',
+                id='3_xaxis_id_input1', placeholder='x'
             )
         ],
-            style={'width': '48%', 'display': 'inline-block'}),
+            style={'width': width, 'display': 'inline-block'}),
         # -------------------------------y Drop down
         html.Div([
             dcc.Dropdown(
-                id='yaxis_id_input2'
+                id='3_yaxis_id_input2', placeholder='y'
             )
-        ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
+        ], style={'width': width, 'display': 'inline-block'}),
+        html.Div([
+            dcc.Dropdown(
+                id='3_zaxis_id_input3', placeholder='Continous z'
+            )
+        ], style={'width': width, 'display': 'inline-block'})
+    ]),
+    # ----------------------3- log, Normal
+    html.Div([
+        # -------------------------------x Drop down
+        html.Div([
+            dcc.Dropdown(
+                id='3_xaxis_Log_input', options=[{'label': 'Automatic', 'value': '-'},
+                                                 {'label': 'Linear', 'value': 'linear'},
+                                                 {'label': 'Log', 'value': 'log'},
+                                                 {'label': 'Date', 'value': 'date'},
+                                                 {'label': 'Catagory', 'value': 'category'},
+                                                 ], value="-"
+            )
+        ],
+            style={'width': width, 'display': 'inline-block'}),
+        # -------------------------------y Drop down
+        html.Div([
+            dcc.Dropdown(
+                id='3_yaxis_Log_input', options=[{'label': 'Automatic', 'value': '-'},
+                    {'label': 'Linear', 'value': 'linear'},
+                    {'label': 'Log', 'value': 'log'},
+                    {'label': 'Date', 'value': 'date'},
+                    {'label': 'Catagory', 'value': 'category'},
+                ], value="-"
+            )
+        ], style={'width': width, 'display': 'inline-block'}),
+
     ]),
     # -------------------------------Graph section
-    dcc.Graph(id='figure_id_output'),
+    dcc.Graph(id='3_figure_id_output'),
     # -------------------------------------------------------
-])
-server=app.server
+    # -----------------------------------------------------Plotting section Discerete
+    html.H5("4. X Y, Discrete Plotting"),
 
+    html.Br(),
+    # ----------------------4- x,y,z
+    html.Div([
+        # -------------------------------x Drop down
+        html.Div([
+            dcc.Dropdown(
+                id='4_xaxis_id_input1', placeholder='x'
+            )
+        ],
+            style={'width': width, 'display': 'inline-block'}),
+        # -------------------------------y Drop down
+        html.Div([
+            dcc.Dropdown(
+                id='4_yaxis_id_input2', placeholder='y'
+            )
+        ], style={'width': width, 'display': 'inline-block'}),
+        html.Div([
+            dcc.Dropdown(
+                id='4_zaxis_id_input3', placeholder='Discrete z'
+            )
+        ], style={'width': width, 'display': 'inline-block'})
+    ]),
+    # ----------------------4- log, Normal
+    html.Div([
+        # -------------------------------x Drop down
+        html.Div([
+            dcc.Dropdown(
+                id='4_xaxis_Log_input', options=[{'label': 'Automatic', 'value': '-'},
+                                                 {'label': 'Linear', 'value': 'linear'},
+                                                 {'label': 'Log', 'value': 'log'},
+                                                 {'label': 'Date', 'value': 'date'},
+                                                 {'label': 'Catagory', 'value': 'category'},
+                                                 ], value="-"
+            )
+        ],
+            style={'width': width, 'display': 'inline-block'}),
+        # -------------------------------y Drop down
+        html.Div([
+            dcc.Dropdown(
+                id='4_yaxis_Log_input', options=[
+                    {'label': 'Automatic', 'value': '-'},
+                    {'label': 'Linear', 'value': 'linear'},
+                    {'label': 'Log', 'value': 'log'},
+                    {'label': 'Date', 'value': 'date'},
+                    {'label': 'Catagory', 'value': 'category'},
+                ], value="-"
+            )
+        ], style={'width': width, 'display': 'inline-block'}),
+
+    ]),
+    # -------------------------------Graph section
+    dcc.Graph(id='4_figure_id_output'),
+    # -------------------------------------------------------
+
+    # html.P(html.Div(id='output-id', children='salam'))
+])
 # <editor-fold desc="methods">
 # file upload function
 def parse_contents(contents, filename):
@@ -93,8 +185,6 @@ def parse_contents(contents, filename):
 
 
 # </editor-fold>
-
-
 # <editor-fold desc="call backs">
 # callback table creation
 @app.callback(Output('table', 'rows'),
@@ -112,7 +202,7 @@ def update_output(contents, filename):
 
 
 # callback update options of histogram dropdown
-@app.callback(Output('histogram_dropdown_input', 'options'),
+@app.callback(Output('2_histogram_dropdown_input', 'options'),
               [Input('table', 'rows')])
 def update_filter_column_options(tablerows):
     dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
@@ -120,8 +210,8 @@ def update_filter_column_options(tablerows):
     return [{'label': i, 'value': i} for i in sorted(list(dff))]
 
 
-# callback update options of x dropdown
-@app.callback(Output('xaxis_id_input1', 'options'),
+# callback update options of x1 dropdown
+@app.callback(Output('3_xaxis_id_input1', 'options'),
               [Input('table', 'rows')])
 def update_filter_column_options(tablerows):
     dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
@@ -131,8 +221,19 @@ def update_filter_column_options(tablerows):
     return [{'label': i, 'value': i} for i in sorted(list(dff))]
 
 
-# callback update options of y dropdown
-@app.callback(Output('yaxis_id_input2', 'options'),
+# callback update options of x2 dropdown
+@app.callback(Output('4_xaxis_id_input1', 'options'),
+              [Input('table', 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+# callback update options of y1 dropdown
+@app.callback(Output('3_yaxis_id_input2', 'options'),
               [Input('table', 'rows')])
 def update_filter_column_options(tablerows):
     dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
@@ -141,18 +242,46 @@ def update_filter_column_options(tablerows):
     return [{'label': i, 'value': i} for i in sorted(list(dff))]
 
 
+# callback update options of y1 dropdown
+@app.callback(Output('4_yaxis_id_input2', 'options'),
+              [Input('table', 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
 
 
+# callback update options of continous z1 dropdown
+@app.callback(Output('3_zaxis_id_input3', 'options'),
+              [Input('table', 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+@app.callback(Output('4_zaxis_id_input3', 'options'),
+              [Input('table', 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+# plotting Histogram
 @app.callback(
     Output(component_id='figure_hist_id_output', component_property='figure'),
     [Input('table', 'rows'),
-     Input('histogram_dropdown_input', 'value'), ]
+     Input('2_histogram_dropdown_input', 'value'), ]
 )
 def update_output_div2(table, feature):
     dff = pd.DataFrame(table)
     data = [go.Histogram(x=dff[feature])]
-    figure={
-        'data':data,
+    figure = {
+        'data': data,
         'layout': {
             'title': 'Dash Data Visualization'
             # ,'barmode':'stack'
@@ -177,27 +306,45 @@ def update_output_div2(table, feature):
     }
     return figure
 
-@app.callback(
-    Output(component_id='figure_id_output', component_property='figure'),
-    [Input('table', 'rows'),
-     Input('xaxis_id_input1', 'value'),
-     Input('yaxis_id_input2', 'value'),  ]
-)
-def update_output_div2(table, featurex,featurey):
-    dff = pd.DataFrame(table)
-    trace = go.Scatter(
-        x = dff[featurex],
-        y = dff[featurey],
-        mode = 'markers',
 
-    )
+@app.callback(
+    Output(component_id='3_figure_id_output', component_property='figure'),
+    [Input('table', 'rows'),
+     Input('3_xaxis_id_input1', 'value'),
+     Input('3_yaxis_id_input2', 'value'),
+     Input('3_zaxis_id_input3', 'value'),
+     Input('3_xaxis_Log_input', 'value'),
+     Input('3_yaxis_Log_input', 'value')
+     ]
+)
+def update_output_div2(table, featurex, featurey, featurez, xtype, ytype):
+    dff = pd.DataFrame(table)
+    print(featurez)
+    if not (featurez is None):
+        trace = go.Scatter(
+            x=dff[featurex],
+            y=dff[featurey],
+            mode='markers',
+            marker=dict(
+                size=12,
+                color=dff[featurez],  # set color equal to a variable
+                colorscale='Viridis',
+                showscale=True
+            )
+        )
+    else:
+        trace = go.Scatter(
+            x=dff[featurex],
+            y=dff[featurey],
+            mode='markers' )
     data = [trace]
-    figure={
-        'data':data,
+    figure = {
+        'data': data,
         'layout': {
             'title': 'Dash Data Visualization'
             # ,'barmode':'stack'
             , 'xaxis': dict(
+                type=xtype,
                 title=featurex,
                 titlefont=dict(
                     family='Courier New, monospace',
@@ -206,6 +353,7 @@ def update_output_div2(table, featurex,featurey):
                 )
             )
             , 'yaxis': dict(
+                type=ytype,
                 title=featurey,
                 titlefont=dict(
                     family='Courier New, monospace',
@@ -217,6 +365,70 @@ def update_output_div2(table, featurex,featurey):
         },
     }
     return figure
+
+
+@app.callback(
+    Output(component_id='4_figure_id_output', component_property='figure'),
+    [Input('table', 'rows'),
+     Input('4_xaxis_id_input1', 'value'),
+     Input('4_yaxis_id_input2', 'value'),
+     Input('4_zaxis_id_input3', 'value'),
+     Input('4_xaxis_Log_input', 'value'),
+     Input('4_yaxis_Log_input', 'value')
+     ]
+)
+def update_output_div2(table, featurex, featurey, featurez, xtype, ytype):
+    dff = pd.DataFrame(table)
+
+    traces = []
+    if not (featurez is None):
+        for class_ in dff[featurez].unique():
+            df_by_continent = dff[dff[featurez] == class_]
+            traces.append(go.Scatter(
+                x=df_by_continent[featurex],
+                y=df_by_continent[featurey],
+                mode='markers',
+                opacity=0.7,
+                marker={'size': 15},
+                name=class_
+            ))
+
+
+    else:
+        traces.append(go.Scatter(
+            x=dff[featurex],
+            y=dff[featurey],
+            mode='markers', ))
+    data = traces
+    figure = {
+        'data': data,
+        'layout': {
+            'title': 'Dash Data Visualization'
+            # ,'barmode':'stack'
+            , 'xaxis': dict(
+                type=xtype,
+                title=featurex,
+                titlefont=dict(
+                       family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f',
+
+                )
+            )
+            , 'yaxis': dict(
+                type=ytype,
+                title=featurey,
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                )
+            )
+
+        },
+    }
+    return figure
+
 
 # </editor-fold>
 

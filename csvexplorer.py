@@ -13,12 +13,37 @@ app.scripts.config.serve_locally = True
 app.config['suppress_callback_exceptions'] = True
 server=app.server
 
+# <editor-fold desc="variables">
 width = '20%'
+_0_upload_data = '0_upload-data'
+_0_table = '0_table'
+_2_dropdown_input = '_2_dropdown_input'
+_2_graph_histogram = '_2_graph_histogram'
+_3_dropdown_x = '_3_dropdown_x'
+_3_dropdown_y = '_3_dropdown_y'
+_3_dropdown_z = '_3_dropdown_z'
+_3_dropdown_x_type = '_3_dropdown_x_type'
+_3_dropdown_y_type = '_3_dropdown_y_type'
+_3_graph = '3_figure_id_output'
+_4_dropdown_x = '_4_dropdown_x'
+_4_dropdown_y = '_4_dropdown_y'
+_4_dropdown_z = '_4_dropdown_z'
+_4_dropdown_x_type = '_4_dropdown_x_type'
+_4_dropdown_y_type = '_4_dropdown_y_type'
+_4_graph = '_4_graph'
+_5_dropdown_x = '_5_dropdown_x'
+_5_dropdown_multi_y = '_5_dropdown_multi_y'
+_5_dropdown_x_type = '_5_dropdown_x_type'
+_5_dropdown_y_type = '_5_dropdown_y_type'
+_5_graph = '_5_graph'
+# </editor-fold>
 app.layout = html.Div([
+
+    # <editor-fold desc="0,1- upload section">
     # ----------------------------------------------------upload section
     html.H5("0. Upload Files"),
     dcc.Upload(
-        id='upload-data',
+        id=_0_upload_data,
         children=html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
@@ -39,15 +64,19 @@ app.layout = html.Div([
     # -------------------------------table results section
     html.Br(),
     html.H5("1. Updated Table"),
-    html.Div(dte.DataTable(rows=[{}], id='table')),
+    html.Div(dte.DataTable(rows=[{}], id=_0_table)),
+    # </editor-fold>
+    # <editor-fold desc="2- Histogram Section">
     # ----------------------------------------------------Histogram section
     html.Br(),
     html.H5("2. Histogram Plot"),
-    html.Div([dcc.Dropdown(id='2_histogram_dropdown_input',
+    html.Div([dcc.Dropdown(id=_2_dropdown_input,
                            multi=False,
                            placeholder='Select feature')],
              style={'width': width, 'display': 'inline-block'}),
-    dcc.Graph(id='figure_hist_id_output'),
+    dcc.Graph(id=_2_graph_histogram),
+    # </editor-fold>
+    # <editor-fold desc="3- Plotting section continous">
     # -----------------------------------------------------Plotting section continous
     html.H5("3. X Y, Continous Plotting"),
 
@@ -57,19 +86,19 @@ app.layout = html.Div([
         # -------------------------------x Drop down
         html.Div([
             dcc.Dropdown(
-                id='3_xaxis_id_input1', placeholder='x'
+                id=_3_dropdown_x, placeholder='x'
             )
         ],
             style={'width': width, 'display': 'inline-block'}),
         # -------------------------------y Drop down
         html.Div([
             dcc.Dropdown(
-                id='3_yaxis_id_input2', placeholder='y'
+                id=_3_dropdown_y, placeholder='y'
             )
         ], style={'width': width, 'display': 'inline-block'}),
         html.Div([
             dcc.Dropdown(
-                id='3_zaxis_id_input3', placeholder='Continous z'
+                id=_3_dropdown_z, placeholder='Continous z'
             )
         ], style={'width': width, 'display': 'inline-block'})
     ]),
@@ -78,31 +107,32 @@ app.layout = html.Div([
         # -------------------------------x Drop down
         html.Div([
             dcc.Dropdown(
-                id='3_xaxis_Log_input', options=[{'label': 'Automatic', 'value': '-'},
-                                                 {'label': 'Linear', 'value': 'linear'},
-                                                 {'label': 'Log', 'value': 'log'},
-                                                 {'label': 'Date', 'value': 'date'},
-                                                 {'label': 'Catagory', 'value': 'category'},
-                                                 ], value="-"
+                id=_3_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
+                                                {'label': 'Linear', 'value': 'linear'},
+                                                {'label': 'Log', 'value': 'log'},
+                                                {'label': 'Date', 'value': 'date'},
+                                                {'label': 'Catagory', 'value': 'category'},
+                                                ], value="-"
             )
         ],
             style={'width': width, 'display': 'inline-block'}),
         # -------------------------------y Drop down
         html.Div([
             dcc.Dropdown(
-                id='3_yaxis_Log_input', options=[{'label': 'Automatic', 'value': '-'},
-                    {'label': 'Linear', 'value': 'linear'},
-                    {'label': 'Log', 'value': 'log'},
-                    {'label': 'Date', 'value': 'date'},
-                    {'label': 'Catagory', 'value': 'category'},
-                ], value="-"
+                id=_3_dropdown_y_type, options=[{'label': 'Automatic', 'value': '-'},
+                                                {'label': 'Linear', 'value': 'linear'},
+                                                {'label': 'Log', 'value': 'log'},
+                                                {'label': 'Date', 'value': 'date'},
+                                                {'label': 'Catagory', 'value': 'category'},
+                                                ], value="-"
             )
         ], style={'width': width, 'display': 'inline-block'}),
 
     ]),
     # -------------------------------Graph section
-    dcc.Graph(id='3_figure_id_output'),
-    # -------------------------------------------------------
+    dcc.Graph(id=_3_graph),
+    # </editor-fold>
+    # <editor-fold desc="4- Plotting section Discerete">
     # -----------------------------------------------------Plotting section Discerete
     html.H5("4. X Y, Discrete Plotting"),
 
@@ -112,19 +142,19 @@ app.layout = html.Div([
         # -------------------------------x Drop down
         html.Div([
             dcc.Dropdown(
-                id='4_xaxis_id_input1', placeholder='x'
+                id=_4_dropdown_x, placeholder='x'
             )
         ],
             style={'width': width, 'display': 'inline-block'}),
         # -------------------------------y Drop down
         html.Div([
             dcc.Dropdown(
-                id='4_yaxis_id_input2', placeholder='y'
+                id=_4_dropdown_y, placeholder='y'
             )
         ], style={'width': width, 'display': 'inline-block'}),
         html.Div([
             dcc.Dropdown(
-                id='4_zaxis_id_input3', placeholder='Discrete z'
+                id=_4_dropdown_z, placeholder='Discrete z'
             )
         ], style={'width': width, 'display': 'inline-block'})
     ]),
@@ -133,19 +163,19 @@ app.layout = html.Div([
         # -------------------------------x Drop down
         html.Div([
             dcc.Dropdown(
-                id='4_xaxis_Log_input', options=[{'label': 'Automatic', 'value': '-'},
-                                                 {'label': 'Linear', 'value': 'linear'},
-                                                 {'label': 'Log', 'value': 'log'},
-                                                 {'label': 'Date', 'value': 'date'},
-                                                 {'label': 'Catagory', 'value': 'category'},
-                                                 ], value="-"
+                id=_4_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
+                                                {'label': 'Linear', 'value': 'linear'},
+                                                {'label': 'Log', 'value': 'log'},
+                                                {'label': 'Date', 'value': 'date'},
+                                                {'label': 'Catagory', 'value': 'category'},
+                                                ], value="-"
             )
         ],
             style={'width': width, 'display': 'inline-block'}),
         # -------------------------------y Drop down
         html.Div([
             dcc.Dropdown(
-                id='4_yaxis_Log_input', options=[
+                id=_4_dropdown_y_type, options=[
                     {'label': 'Automatic', 'value': '-'},
                     {'label': 'Linear', 'value': 'linear'},
                     {'label': 'Log', 'value': 'log'},
@@ -157,7 +187,61 @@ app.layout = html.Div([
 
     ]),
     # -------------------------------Graph section
-    dcc.Graph(id='4_figure_id_output'),
+    dcc.Graph(id=_4_graph),
+    # </editor-fold>
+    # <editor-fold desc="5- Plotting section continous multi">
+    # -----------------------------------------------------Plotting section Continous multi
+    html.H5("5. X Y, Continous multi y Plotting"),
+
+    html.Br(),
+    # ----------------------5- x,y,z
+    html.Div([
+        # -------------------------------x Drop down
+        html.Div([
+            dcc.Dropdown(
+                id=_5_dropdown_x, placeholder='x'
+            )
+        ],
+            style={'width': width, 'display': 'inline-block'}),
+        # -------------------------------y Drop down
+        html.Div([
+            dcc.Dropdown(
+                id=_5_dropdown_multi_y, placeholder='y', multi=True
+            )
+        ], style={'width': width, 'display': 'inline-block'}),
+
+    ]),
+    # ----------------------5- log, Normal
+    html.Div([
+        # -------------------------------x Drop down
+        html.Div([
+            dcc.Dropdown(
+                id=_5_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
+                                                {'label': 'Linear', 'value': 'linear'},
+                                                {'label': 'Log', 'value': 'log'},
+                                                {'label': 'Date', 'value': 'date'},
+                                                {'label': 'Catagory', 'value': 'category'},
+                                                ], value="-"
+            )
+        ],
+            style={'width': width, 'display': 'inline-block'}),
+        # -------------------------------y Drop down
+        html.Div([
+            dcc.Dropdown(
+                id=_5_dropdown_y_type, options=[
+                    {'label': 'Automatic', 'value': '-'},
+                    {'label': 'Linear', 'value': 'linear'},
+                    {'label': 'Log', 'value': 'log'},
+                    {'label': 'Date', 'value': 'date'},
+                    {'label': 'Catagory', 'value': 'category'},
+                ], value="-"
+            )
+        ], style={'width': width, 'display': 'inline-block'}),
+
+    ]),
+    # -------------------------------Graph section
+    dcc.Graph(id=_5_graph),
+    # </editor-fold>
     # -------------------------------------------------------
 
     # html.P(html.Div(id='output-id', children='salam'))
@@ -187,9 +271,10 @@ def parse_contents(contents, filename):
 # </editor-fold>
 # <editor-fold desc="call backs">
 # callback table creation
-@app.callback(Output('table', 'rows'),
-              [Input('upload-data', 'contents'),
-               Input('upload-data', 'filename')])
+# <editor-fold desc="section 0,1 upload">
+@app.callback(Output(_0_table, 'rows'),
+              [Input(_0_upload_data, 'contents'),
+               Input(_0_upload_data, 'filename')])
 def update_output(contents, filename):
     if contents is not None:
         df = parse_contents(contents, filename)
@@ -199,83 +284,24 @@ def update_output(contents, filename):
             return [{}]
     else:
         return [{}]
+# </editor-fold>
 
 
+# <editor-fold desc="section 2; histogram">
 # callback update options of histogram dropdown
-@app.callback(Output('2_histogram_dropdown_input', 'options'),
-              [Input('table', 'rows')])
+@app.callback(Output(_2_dropdown_input, 'options'),
+              [Input(_0_table, 'rows')])
 def update_filter_column_options(tablerows):
     dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
     print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
-    return [{'label': i, 'value': i} for i in sorted(list(dff))]
-
-
-# callback update options of x1 dropdown
-@app.callback(Output('3_xaxis_id_input1', 'options'),
-              [Input('table', 'rows')])
-def update_filter_column_options(tablerows):
-    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
-
-    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
-
-    return [{'label': i, 'value': i} for i in sorted(list(dff))]
-
-
-# callback update options of x2 dropdown
-@app.callback(Output('4_xaxis_id_input1', 'options'),
-              [Input('table', 'rows')])
-def update_filter_column_options(tablerows):
-    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
-
-    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
-
-    return [{'label': i, 'value': i} for i in sorted(list(dff))]
-
-
-# callback update options of y1 dropdown
-@app.callback(Output('3_yaxis_id_input2', 'options'),
-              [Input('table', 'rows')])
-def update_filter_column_options(tablerows):
-    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
-    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
-
-    return [{'label': i, 'value': i} for i in sorted(list(dff))]
-
-
-# callback update options of y1 dropdown
-@app.callback(Output('4_yaxis_id_input2', 'options'),
-              [Input('table', 'rows')])
-def update_filter_column_options(tablerows):
-    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
-    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
-
-    return [{'label': i, 'value': i} for i in sorted(list(dff))]
-
-
-# callback update options of continous z1 dropdown
-@app.callback(Output('3_zaxis_id_input3', 'options'),
-              [Input('table', 'rows')])
-def update_filter_column_options(tablerows):
-    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
-    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
-
-    return [{'label': i, 'value': i} for i in sorted(list(dff))]
-
-
-@app.callback(Output('4_zaxis_id_input3', 'options'),
-              [Input('table', 'rows')])
-def update_filter_column_options(tablerows):
-    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
-    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
-
     return [{'label': i, 'value': i} for i in sorted(list(dff))]
 
 
 # plotting Histogram
 @app.callback(
-    Output(component_id='figure_hist_id_output', component_property='figure'),
-    [Input('table', 'rows'),
-     Input('2_histogram_dropdown_input', 'value'), ]
+    Output(component_id=_2_graph_histogram, component_property='figure'),
+    [Input(_0_table, 'rows'),
+     Input(_2_dropdown_input, 'value'), ]
 )
 def update_output_div2(table, feature):
     dff = pd.DataFrame(table)
@@ -307,14 +333,48 @@ def update_output_div2(table, feature):
     return figure
 
 
+# </editor-fold>
+
+# <editor-fold desc="section 3; continous x,y,z">
+# callback update options of x1 dropdown
+@app.callback(Output(_3_dropdown_x, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+# callback update options of y1 dropdown
+@app.callback(Output(_3_dropdown_y, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+# callback update options of continous z1 dropdown
+@app.callback(Output(_3_dropdown_z, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
 @app.callback(
-    Output(component_id='3_figure_id_output', component_property='figure'),
-    [Input('table', 'rows'),
-     Input('3_xaxis_id_input1', 'value'),
-     Input('3_yaxis_id_input2', 'value'),
-     Input('3_zaxis_id_input3', 'value'),
-     Input('3_xaxis_Log_input', 'value'),
-     Input('3_yaxis_Log_input', 'value')
+    Output(component_id=_3_graph, component_property='figure'),
+    [Input(_0_table, 'rows'),
+     Input(_3_dropdown_x, 'value'),
+     Input(_3_dropdown_y, 'value'),
+     Input(_3_dropdown_z, 'value'),
+     Input(_3_dropdown_x_type, 'value'),
+     Input(_3_dropdown_y_type, 'value')
      ]
 )
 def update_output_div2(table, featurex, featurey, featurez, xtype, ytype):
@@ -336,7 +396,7 @@ def update_output_div2(table, featurex, featurey, featurez, xtype, ytype):
         trace = go.Scatter(
             x=dff[featurex],
             y=dff[featurey],
-            mode='markers' )
+            mode='markers')
     data = [trace]
     figure = {
         'data': data,
@@ -367,14 +427,48 @@ def update_output_div2(table, featurex, featurey, featurez, xtype, ytype):
     return figure
 
 
+# </editor-fold>
+
+
+# <editor-fold desc="section 4; Discerete x,y,z"">
+# callback update options of x2 dropdown
+@app.callback(Output(_4_dropdown_x, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+# callback update options of y1 dropdown
+@app.callback(Output(_4_dropdown_y, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+@app.callback(Output(_4_dropdown_z, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
 @app.callback(
-    Output(component_id='4_figure_id_output', component_property='figure'),
-    [Input('table', 'rows'),
-     Input('4_xaxis_id_input1', 'value'),
-     Input('4_yaxis_id_input2', 'value'),
-     Input('4_zaxis_id_input3', 'value'),
-     Input('4_xaxis_Log_input', 'value'),
-     Input('4_yaxis_Log_input', 'value')
+    Output(component_id=_4_graph, component_property='figure'),
+    [Input(_0_table, 'rows'),
+     Input(_4_dropdown_x, 'value'),
+     Input(_4_dropdown_y, 'value'),
+     Input(_4_dropdown_z, 'value'),
+     Input(_4_dropdown_x_type, 'value'),
+     Input(_4_dropdown_y_type, 'value')
      ]
 )
 def update_output_div2(table, featurex, featurey, featurez, xtype, ytype):
@@ -409,7 +503,7 @@ def update_output_div2(table, featurex, featurey, featurez, xtype, ytype):
                 type=xtype,
                 title=featurex,
                 titlefont=dict(
-                       family='Courier New, monospace',
+                    family='Courier New, monospace',
                     size=18,
                     color='#7f7f7f',
 
@@ -431,6 +525,84 @@ def update_output_div2(table, featurex, featurey, featurez, xtype, ytype):
 
 
 # </editor-fold>
+
+
+# <editor-fold desc="section 5; x,y, multi y continous">
+@app.callback(Output(_5_dropdown_x, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+@app.callback(Output(_5_dropdown_multi_y, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+@app.callback(
+    Output(component_id=_5_graph, component_property='figure'),
+    [Input(_0_table, 'rows'),
+     Input(_5_dropdown_x, 'value'),
+     Input(_5_dropdown_multi_y, 'value'),
+     Input(_5_dropdown_x_type, 'value'),
+     Input(_5_dropdown_y_type, 'value')
+     ]
+)
+def update_output_div2(table, featurex, listfeaturey, xtype, ytype):
+    dff = pd.DataFrame(table)
+    traces = []
+    for y in listfeaturey:
+        traces.append(go.Scatter(
+            x=dff[featurex],
+            y=dff[y],
+            mode='markers',
+            opacity=0.7,
+            marker={'size': 15},
+            name=y
+        ))
+
+
+    data = traces
+    figure = {
+    'data': data,
+    'layout': {
+        'title': 'Dash Data Visualization'
+        # ,'barmode':'stack'
+        , 'xaxis': dict(
+            type=xtype,
+            title=featurex,
+            titlefont=dict(
+                family='Courier New, monospace',
+                size=18,
+                color='#7f7f7f',
+
+            )
+        )
+        , 'yaxis': dict(
+            type=ytype,
+            title="",
+            titlefont=dict(
+                family='Courier New, monospace',
+                size=18,
+                color='#7f7f7f'
+            )
+        )
+
+    },
+}
+    return figure
+# </editor-fold>
+
+# </editor-fold>
+
 
 
 app.css.append_css({

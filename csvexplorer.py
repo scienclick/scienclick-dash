@@ -17,8 +17,9 @@ server=app.server
 width = '20%'
 _0_upload_data = '0_upload-data'
 _0_table = '0_table'
-_2_dropdown_input = '_2_dropdown_input'
-_2_graph_histogram = '_2_graph_histogram'
+_2_dropdown_input1 = '_2_dropdown_input1'
+_2_dropdown_input2 = '_2_dropdown_input2'
+_2_graph_histogram = '_2_graph_histogram2'
 _3_dropdown_x = '_3_dropdown_x'
 _3_dropdown_y = '_3_dropdown_y'
 _3_dropdown_z = '_3_dropdown_z'
@@ -69,178 +70,199 @@ app.layout = html.Div([
     # <editor-fold desc="2- Histogram Section">
     # ----------------------------------------------------Histogram section
     html.Br(),
+
     html.H5("2. Histogram Plot"),
-    html.Div([dcc.Dropdown(id=_2_dropdown_input,
-                           multi=False,
-                           placeholder='Select feature')],
-             style={'width': width, 'display': 'inline-block'}),
-    dcc.Graph(id=_2_graph_histogram),
+    html.Details([
+        html.Summary('histogram parameters'),
+        html.Div([
+            html.Div([dcc.Dropdown(id=_2_dropdown_input1,
+                                   multi=False,
+                                   placeholder='Select feature')],
+                     style={'width': width, 'display': 'inline-block'}),
+           html.P(children="split by:",style={'display': 'inline-block'}),
+            html.Div([dcc.Dropdown(id=_2_dropdown_input2,
+                                   multi=False,
+                                   placeholder='Discrete feature')],
+                     style={'width': width, 'display': 'inline-block'}),
+            dcc.Graph(id=_2_graph_histogram)])
+    ]),
     # </editor-fold>
     # <editor-fold desc="3- Plotting section continous">
     # -----------------------------------------------------Plotting section continous
+    html.Br(),
     html.H5("3. X Y, Continous Plotting"),
+    html.Details([
+        html.Summary('plot parameters'),
+        html.Div([
+            # -------------------------------x Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_3_dropdown_x, placeholder='x'
+                )
+            ],
+                style={'width': width, 'display': 'inline-block'}),
+            # -------------------------------y Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_3_dropdown_y, placeholder='y'
+                )
+            ], style={'width': width, 'display': 'inline-block'}),
+            html.Div([
+                dcc.Dropdown(
+                    id=_3_dropdown_z, placeholder='Continous z'
+                )
+            ], style={'width': width, 'display': 'inline-block'})
+        ]),
+        # ----------------------3- log, Normal
+        html.Div([
+            # -------------------------------x Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_3_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
+                                                    {'label': 'Linear', 'value': 'linear'},
+                                                    {'label': 'Log', 'value': 'log'},
+                                                    {'label': 'Date', 'value': 'date'},
+                                                    {'label': 'Catagory', 'value': 'category'},
+                                                    ], value="-"
+                )
+            ],
+                style={'width': width, 'display': 'inline-block'}),
+            # -------------------------------y Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_3_dropdown_y_type, options=[{'label': 'Automatic', 'value': '-'},
+                                                    {'label': 'Linear', 'value': 'linear'},
+                                                    {'label': 'Log', 'value': 'log'},
+                                                    {'label': 'Date', 'value': 'date'},
+                                                    {'label': 'Catagory', 'value': 'category'},
+                                                    ], value="-"
+                )
+            ], style={'width': width, 'display': 'inline-block'}),
 
+        ]),
+        # -------------------------------Graph section
+        dcc.Graph(id=_3_graph),
+    ]),
     html.Br(),
     # ----------------------3- x,y,z
-    html.Div([
-        # -------------------------------x Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_3_dropdown_x, placeholder='x'
-            )
-        ],
-            style={'width': width, 'display': 'inline-block'}),
-        # -------------------------------y Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_3_dropdown_y, placeholder='y'
-            )
-        ], style={'width': width, 'display': 'inline-block'}),
-        html.Div([
-            dcc.Dropdown(
-                id=_3_dropdown_z, placeholder='Continous z'
-            )
-        ], style={'width': width, 'display': 'inline-block'})
-    ]),
-    # ----------------------3- log, Normal
-    html.Div([
-        # -------------------------------x Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_3_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
-                                                {'label': 'Linear', 'value': 'linear'},
-                                                {'label': 'Log', 'value': 'log'},
-                                                {'label': 'Date', 'value': 'date'},
-                                                {'label': 'Catagory', 'value': 'category'},
-                                                ], value="-"
-            )
-        ],
-            style={'width': width, 'display': 'inline-block'}),
-        # -------------------------------y Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_3_dropdown_y_type, options=[{'label': 'Automatic', 'value': '-'},
-                                                {'label': 'Linear', 'value': 'linear'},
-                                                {'label': 'Log', 'value': 'log'},
-                                                {'label': 'Date', 'value': 'date'},
-                                                {'label': 'Catagory', 'value': 'category'},
-                                                ], value="-"
-            )
-        ], style={'width': width, 'display': 'inline-block'}),
 
-    ]),
-    # -------------------------------Graph section
-    dcc.Graph(id=_3_graph),
     # </editor-fold>
     # <editor-fold desc="4- Plotting section Discerete">
     # -----------------------------------------------------Plotting section Discerete
     html.H5("4. X Y, Discrete Plotting"),
-
-    html.Br(),
     # ----------------------4- x,y,z
-    html.Div([
-        # -------------------------------x Drop down
+    html.Details([
+        html.Summary('plot parameters'),
         html.Div([
-            dcc.Dropdown(
-                id=_4_dropdown_x, placeholder='x'
-            )
-        ],
-            style={'width': width, 'display': 'inline-block'}),
-        # -------------------------------y Drop down
+            # -------------------------------x Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_4_dropdown_x, placeholder='x'
+                )
+            ],
+                style={'width': width, 'display': 'inline-block'}),
+            # -------------------------------y Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_4_dropdown_y, placeholder='y'
+                )
+            ], style={'width': width, 'display': 'inline-block'}),
+            html.Div([
+                dcc.Dropdown(
+                    id=_4_dropdown_z, placeholder='Discrete z'
+                )
+            ], style={'width': width, 'display': 'inline-block'})
+        ]),
+        # ----------------------4- log, Normal
         html.Div([
-            dcc.Dropdown(
-                id=_4_dropdown_y, placeholder='y'
-            )
-        ], style={'width': width, 'display': 'inline-block'}),
-        html.Div([
-            dcc.Dropdown(
-                id=_4_dropdown_z, placeholder='Discrete z'
-            )
-        ], style={'width': width, 'display': 'inline-block'})
-    ]),
-    # ----------------------4- log, Normal
-    html.Div([
-        # -------------------------------x Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_4_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
-                                                {'label': 'Linear', 'value': 'linear'},
-                                                {'label': 'Log', 'value': 'log'},
-                                                {'label': 'Date', 'value': 'date'},
-                                                {'label': 'Catagory', 'value': 'category'},
-                                                ], value="-"
-            )
-        ],
-            style={'width': width, 'display': 'inline-block'}),
-        # -------------------------------y Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_4_dropdown_y_type, options=[
-                    {'label': 'Automatic', 'value': '-'},
-                    {'label': 'Linear', 'value': 'linear'},
-                    {'label': 'Log', 'value': 'log'},
-                    {'label': 'Date', 'value': 'date'},
-                    {'label': 'Catagory', 'value': 'category'},
-                ], value="-"
-            )
-        ], style={'width': width, 'display': 'inline-block'}),
+            # -------------------------------x Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_4_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
+                                                    {'label': 'Linear', 'value': 'linear'},
+                                                    {'label': 'Log', 'value': 'log'},
+                                                    {'label': 'Date', 'value': 'date'},
+                                                    {'label': 'Catagory', 'value': 'category'},
+                                                    ], value="-"
+                )
+            ],
+                style={'width': width, 'display': 'inline-block'}),
+            # -------------------------------y Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_4_dropdown_y_type, options=[
+                        {'label': 'Automatic', 'value': '-'},
+                        {'label': 'Linear', 'value': 'linear'},
+                        {'label': 'Log', 'value': 'log'},
+                        {'label': 'Date', 'value': 'date'},
+                        {'label': 'Catagory', 'value': 'category'},
+                    ], value="-"
+                )
+            ], style={'width': width, 'display': 'inline-block'}),
 
+        ]),
+        # -------------------------------Graph section
+        dcc.Graph(id=_4_graph),
     ]),
-    # -------------------------------Graph section
-    dcc.Graph(id=_4_graph),
+    html.Br(),
     # </editor-fold>
     # <editor-fold desc="5- Plotting section continous multi">
     # -----------------------------------------------------Plotting section Continous multi
     html.H5("5. X Y, Continous multi y Plotting"),
+    html.Details([
+        html.Summary('plot parameters'),
+        html.Div([
+            # ----------------------5- x,y,z
+            html.Div([
+                # -------------------------------x Drop down
+                html.Div([
+                    dcc.Dropdown(
+                        id=_5_dropdown_x, placeholder='x'
+                    )
+                ],
+                    style={'width': width, 'display': 'inline-block'}),
+                # -------------------------------y Drop down
+                html.Div([
+                    dcc.Dropdown(
+                        id=_5_dropdown_multi_y, placeholder='y', multi=True
+                    )
+                ], style={'width': width, 'display': 'inline-block'}),
+
+            ]),
+            # ----------------------5- log, Normal
+            html.Div([
+                # -------------------------------x Drop down
+                html.Div([
+                    dcc.Dropdown(
+                        id=_5_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
+                                                        {'label': 'Linear', 'value': 'linear'},
+                                                        {'label': 'Log', 'value': 'log'},
+                                                        {'label': 'Date', 'value': 'date'},
+                                                        {'label': 'Catagory', 'value': 'category'},
+                                                        ], value="-"
+                    )
+                ],
+                    style={'width': width, 'display': 'inline-block'}),
+                # -------------------------------y Drop down
+                html.Div([
+                    dcc.Dropdown(
+                        id=_5_dropdown_y_type, options=[
+                            {'label': 'Automatic', 'value': '-'},
+                            {'label': 'Linear', 'value': 'linear'},
+                            {'label': 'Log', 'value': 'log'},
+                            {'label': 'Date', 'value': 'date'},
+                            {'label': 'Catagory', 'value': 'category'},
+                        ], value="-"
+                    )
+                ], style={'width': width, 'display': 'inline-block'}),
+
+            ]),
+            # -------------------------------Graph section
+            dcc.Graph(id=_5_graph)],
+        )
+    ]),
 
     html.Br(),
-    # ----------------------5- x,y,z
-    html.Div([
-        # -------------------------------x Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_5_dropdown_x, placeholder='x'
-            )
-        ],
-            style={'width': width, 'display': 'inline-block'}),
-        # -------------------------------y Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_5_dropdown_multi_y, placeholder='y', multi=True
-            )
-        ], style={'width': width, 'display': 'inline-block'}),
-
-    ]),
-    # ----------------------5- log, Normal
-    html.Div([
-        # -------------------------------x Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_5_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
-                                                {'label': 'Linear', 'value': 'linear'},
-                                                {'label': 'Log', 'value': 'log'},
-                                                {'label': 'Date', 'value': 'date'},
-                                                {'label': 'Catagory', 'value': 'category'},
-                                                ], value="-"
-            )
-        ],
-            style={'width': width, 'display': 'inline-block'}),
-        # -------------------------------y Drop down
-        html.Div([
-            dcc.Dropdown(
-                id=_5_dropdown_y_type, options=[
-                    {'label': 'Automatic', 'value': '-'},
-                    {'label': 'Linear', 'value': 'linear'},
-                    {'label': 'Log', 'value': 'log'},
-                    {'label': 'Date', 'value': 'date'},
-                    {'label': 'Catagory', 'value': 'category'},
-                ], value="-"
-            )
-        ], style={'width': width, 'display': 'inline-block'}),
-
-    ]),
-    # -------------------------------Graph section
-    dcc.Graph(id=_5_graph),
     # </editor-fold>
     # -------------------------------------------------------
 
@@ -284,12 +306,14 @@ def update_output(contents, filename):
             return [{}]
     else:
         return [{}]
+
+
 # </editor-fold>
 
 
 # <editor-fold desc="section 2; histogram">
 # callback update options of histogram dropdown
-@app.callback(Output(_2_dropdown_input, 'options'),
+@app.callback(Output(_2_dropdown_input1, 'options'),
               [Input(_0_table, 'rows')])
 def update_filter_column_options(tablerows):
     dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
@@ -297,40 +321,117 @@ def update_filter_column_options(tablerows):
     return [{'label': i, 'value': i} for i in sorted(list(dff))]
 
 
+@app.callback(Output(_2_dropdown_input2, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+    return [{'label': i, 'value': i} for i in sorted(list(dff))]
+
+
+# # plotting Histogram
+# @app.callback(
+#     Output(component_id=_2_graph_histogram, component_property='figure'),
+#     [Input(_0_table, 'rows'),
+#      Input(_2_dropdown_input1, 'value'), ]
+# )
+# def update_output_div2(table, feature):
+#     dff = pd.DataFrame(table)
+#     data = [go.Histogram(x=dff[feature])]
+#     figure = {
+#         'data': data,
+#         'layout': {
+#             'title': 'Dash Data Visualization'
+#             # ,'barmode':'stack'
+#             , 'xaxis': dict(
+#                 title=feature,
+#                 titlefont=dict(
+#                     family='Courier New, monospace',
+#                     size=18,
+#                     color='#7f7f7f'
+#                 )
+#             )
+#             , 'yaxis': dict(
+#                 title='frequency',
+#                 titlefont=dict(
+#                     family='Courier New, monospace',
+#                     size=18,
+#                     color='#7f7f7f'
+#                 )
+#             )
+#
+#         },
+#     }
+#     return figure
 # plotting Histogram
 @app.callback(
     Output(component_id=_2_graph_histogram, component_property='figure'),
     [Input(_0_table, 'rows'),
-     Input(_2_dropdown_input, 'value'), ]
+     Input(_2_dropdown_input1, 'value'),
+     Input(_2_dropdown_input2, 'value'), ]
 )
-def update_output_div2(table, feature):
+def update_output_div2(table, feature, byfeature2):
     dff = pd.DataFrame(table)
-    data = [go.Histogram(x=dff[feature])]
-    figure = {
-        'data': data,
-        'layout': {
-            'title': 'Dash Data Visualization'
-            # ,'barmode':'stack'
-            , 'xaxis': dict(
-                title=feature,
-                titlefont=dict(
-                    family='Courier New, monospace',
-                    size=18,
-                    color='#7f7f7f'
+    if byfeature2 is not None:
+        traces = []
+        for y in dff[byfeature2].unique():
+            traces.append(go.Histogram(x=dff[feature][dff[byfeature2] == y],name=str(y)))
+        figure = {
+            'data': traces,
+            'layout': {
+                'title': 'Dash Data Visualization'
+                # ,'barmode':'stack'
+                , 'xaxis': dict(
+                    title=feature,
+                    titlefont=dict(
+                        family='Courier New, monospace',
+                        size=18,
+                        color='#7f7f7f'
+                    )
                 )
-            )
-            , 'yaxis': dict(
-                title='frequency',
-                titlefont=dict(
-                    family='Courier New, monospace',
-                    size=18,
-                    color='#7f7f7f'
+                , 'yaxis': dict(
+                    title='frequency',
+                    titlefont=dict(
+                        family='Courier New, monospace',
+                        size=18,
+                        color='#7f7f7f'
+                    )
                 )
-            )
 
-        },
-    }
-    return figure
+            },
+        }
+        return figure
+    else:
+        dff = pd.DataFrame(table)
+        data = [go.Histogram(x=dff[feature])]
+        figure = {
+            'data': data,
+            'layout': {
+                'title': 'Dash Data Visualization'
+                # ,'barmode':'stack'
+                , 'xaxis': dict(
+                    title=feature,
+                    titlefont=dict(
+                        family='Courier New, monospace',
+                        size=18,
+                        color='#7f7f7f'
+                    )
+                )
+                , 'yaxis': dict(
+                    title='frequency',
+                    titlefont=dict(
+                        family='Courier New, monospace',
+                        size=18,
+                        color='#7f7f7f'
+                    )
+                )
+
+            },
+        }
+        return figure
+
+
+
 
 
 # </editor-fold>
@@ -484,7 +585,7 @@ def update_output_div2(table, featurex, featurey, featurez, xtype, ytype):
                 mode='markers',
                 opacity=0.7,
                 marker={'size': 15},
-                name=class_
+                name=str(class_)
             ))
 
 
@@ -569,39 +670,41 @@ def update_output_div2(table, featurex, listfeaturey, xtype, ytype):
             name=y
         ))
 
-
     data = traces
     figure = {
-    'data': data,
-    'layout': {
-        'title': 'Dash Data Visualization'
-        # ,'barmode':'stack'
-        , 'xaxis': dict(
-            type=xtype,
-            title=featurex,
-            titlefont=dict(
-                family='Courier New, monospace',
-                size=18,
-                color='#7f7f7f',
+        'data': data,
+        'layout': {
+            'title': 'Dash Data Visualization'
+            # ,'barmode':'stack'
+            , 'xaxis': dict(
+                type=xtype,
+                title=featurex,
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f',
 
+                )
             )
-        )
-        , 'yaxis': dict(
-            type=ytype,
-            title="",
-            titlefont=dict(
-                family='Courier New, monospace',
-                size=18,
-                color='#7f7f7f'
+            , 'yaxis': dict(
+                type=ytype,
+                title="",
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                )
             )
-        )
 
-    },
-}
+        },
+    }
     return figure
+
+
 # </editor-fold>
 
 # </editor-fold>
+
 
 
 

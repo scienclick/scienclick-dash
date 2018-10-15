@@ -1,12 +1,17 @@
 import base64
 import io
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table_experiments as dte
 import pandas as pd
-from dash.dependencies import Input, Output
 import plotly.graph_objs as go
+from dash.dependencies import Input, Output
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import KMeans
+from sklearn.mixture import GaussianMixture
+from sklearn.preprocessing import StandardScaler
 
 app = dash.Dash()
 app.scripts.config.serve_locally = True
@@ -39,8 +44,38 @@ _6_dropdown_multi_y = '_6_dropdown_multi_y'
 _6_dropdown_x_type = '_6_dropdown_x_type'
 _6_dropdown_y_type = '_6_dropdown_y_type'
 _6_graph = '_6_graph'
+_7_dropdown_x = '7_dropdown_x'
+_7_dropdown_y = '7_dropdown_y'
+_7_dropdown_x_type = '_7_dropdown_x_type'
+_7_dropdown_y_type = '_7_dropdown_y_type'
+_7_dropdown_input_multi = '7_dropdown_input_multi'
+_7_dropdown_clustering_method = '7_dropdown_clustering_method'
+_7_dropdown_cluster_numbers = '_7_dropdown_cluster_numbers'
+_7_graph = '_7_graph'
+
+urls = {
+    'statistics': '/scienclick/datastatistics',
+    'explorer': '/scienclick/dataexplorer',
+    'dataclustering': '/scienclick/clustering',
+    'ML': '/scienclick/ML',
+    'CNN': '/scienclick/CNN',
+    'words': '/scienclick/words'}
 # </editor-fold>
 app.layout = html.Div([
+    # Banner display
+    html.Div([
+        html.H2(
+            'Scienclick: data unleashed',
+            id='title'
+        ),
+        html.Img(
+            # src="https://s3-us-west-1.amazonaws.com/plotly-tutorials/logo/new-branding/dash-logo-by-plotly-stripe-inverted.png"
+        )
+    ],
+        className="banner"
+    ),
+
+    # Body
 
     # <editor-fold desc="0,1- upload section">
     # ----------------------------------------------------upload section
@@ -293,10 +328,111 @@ app.layout = html.Div([
 
     html.Br(),
     # </editor-fold>
+    # <editor-fold desc="7- Plotting section Discerete">
+    # -----------------------------------------------------Plotting section Discerete
+    html.H5("7. Clustering"),
+    # ----------------------7- x,y
+    html.Details([
+        html.Summary('plot parameters'),
+        html.Div([
+            # -------------------------------x Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_7_dropdown_x, placeholder='x to display the results'
+                )
+            ],
+                style={'width': width, 'display': 'inline-block'}),
+            # -------------------------------y Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_7_dropdown_y, placeholder='y to display the results'
+                )
+            ], style={'width': width, 'display': 'inline-block'}),
+        ]),
+        # ----------------------7- log, Normal
+        html.Div([
+            # -------------------------------x Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_7_dropdown_x_type, options=[{'label': 'Automatic', 'value': '-'},
+                                                    {'label': 'Linear', 'value': 'linear'},
+                                                    {'label': 'Log', 'value': 'log'},
+                                                    {'label': 'Date', 'value': 'date'},
+                                                    {'label': 'Catagory', 'value': 'category'},
+                                                    ], value="-"
+                )
+            ],
+                style={'width': width, 'display': 'inline-block'}),
+            # -------------------------------y Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_7_dropdown_y_type, options=[
+                        {'label': 'Automatic', 'value': '-'},
+                        {'label': 'Linear', 'value': 'linear'},
+                        {'label': 'Log', 'value': 'log'},
+                        {'label': 'Date', 'value': 'date'},
+                        {'label': 'Catagory', 'value': 'category'},
+                    ], value="-"
+                )
+            ], style={'width': width, 'display': 'inline-block'}),
+
+        ]),
+        # ----------------------7- clustering params
+        html.Div([
+            # -------------------------------x multy
+            html.Div([
+                dcc.Dropdown(
+                    id=_7_dropdown_input_multi, placeholder='features to be used for clustering',
+                    multi=True
+                )
+            ], style={'width': width, 'display': 'inline-block'}),
+            # -------------------------------y Drop down
+            html.Div([
+                dcc.Dropdown(
+                    id=_7_dropdown_clustering_method, placeholder='methods',
+                    options=[{'label': 'K-means', 'value': 'kmeans'},
+                             {'label': 'GMM', 'value': 'gmm'},
+                             {'label': 'Agglomerative Complete', 'value': 'aggc'},
+                             {'label': 'Agglomerative Average', 'value': 'agga'},
+                             ]
+                )
+            ], style={'width': width, 'display': 'inline-block'}),
+            html.Div([
+                dcc.Dropdown(
+                    id=_7_dropdown_cluster_numbers, placeholder='number of clusters',
+                    options=[{'label': '2', 'value': '2'},
+                             {'label': '3', 'value': '3'},
+                             {'label': '4', 'value': '4'},
+                             {'label': '5', 'value': '5'},
+
+                             ]
+                )
+            ], style={'width': width, 'display': 'inline-block'})
+        ]),
+        # -------------------------------Graph section
+        dcc.Graph(id=_7_graph),
+    ]),
+    html.Br(),
+    # </editor-fold>
 
 ])
 # <editor-fold desc="methods">
 # file upload function
+def cluster(df, method, clusternum):
+    #df contains the columns that needs to be used in clustering
+    scaled_data=df
+    if method == "gmm":
+        return GaussianMixture(n_components=clusternum).fit(scaled_data).predict(scaled_data)
+    elif method == "kmeans":
+        return KMeans(n_clusters=clusternum).fit(scaled_data).predict(scaled_data)
+    elif method == "aggc":
+        return AgglomerativeClustering(n_clusters=clusternum, linkage="complete").fit_predict(scaled_data)
+    elif method == "agga":
+        return AgglomerativeClustering(n_clusters=clusternum, linkage="average").fit_predict(scaled_data)
+    else:
+        return
+
+
 def parse_contents(contents, filename):
     content_type, content_string = contents.split(',')
 
@@ -309,13 +445,11 @@ def parse_contents(contents, filename):
         elif 'xls' in filename:
             # Assume that the user uploaded an excel file
             df = pd.read_excel(io.BytesIO(decoded))
-
     except Exception as e:
         print(e)
         return None
 
     return df
-
 
 # </editor-fold>
 # <editor-fold desc="call backs">
@@ -347,19 +481,17 @@ def update_filter_column_options(tablerows):
     return [{'label': i, 'value': i} for i in sorted(dff.describe().columns)]
 
 
-
-
 @app.callback(
     Output(component_id=_2_graph_box, component_property='figure'),
     [Input(_0_table, 'rows'),
-     Input(_2_dropdown_input_multi, 'value'),]
+     Input(_2_dropdown_input_multi, 'value'), ]
 )
 def update_output_div2(table, features, ):
     dff = pd.DataFrame(table)
 
     traces = []
     for y in dff[features]:
-        traces.append(go.Box(x=dff[y],name=str(y)))
+        traces.append(go.Box(x=dff[y], name=str(y)))
     figure = {
         'data': traces,
         'layout': {
@@ -386,9 +518,6 @@ def update_output_div2(table, features, ):
         },
     }
     return figure
-
-
-
 
 
 # </editor-fold>
@@ -457,7 +586,7 @@ def update_output_div2(table, feature, byfeature2):
     if byfeature2 is not None:
         traces = []
         for y in dff[byfeature2].unique():
-            traces.append(go.Histogram(x=dff[feature][dff[byfeature2] == y],name=str(y)))
+            traces.append(go.Histogram(x=dff[feature][dff[byfeature2] == y], name=str(y)))
         figure = {
             'data': traces,
             'layout': {
@@ -511,9 +640,6 @@ def update_output_div2(table, feature, byfeature2):
             },
         }
         return figure
-
-
-
 
 
 # </editor-fold>
@@ -641,7 +767,8 @@ def update_filter_column_options(tablerows):
     dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
     print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
 
-    return [{'label': i, 'value': i} for i in sorted(dff.columns.difference(dff.describe().columns))]
+    return [{'label': i, 'value': i} for i in
+            sorted(dff.columns.difference(dff.describe().columns))]
 
 
 @app.callback(
@@ -785,7 +912,109 @@ def update_output_div2(table, featurex, listfeaturey, xtype, ytype):
 
 # </editor-fold>
 
+# <editor-fold desc="section 7: clustering">
+@app.callback(Output(_7_dropdown_input_multi, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+    return [{'label': i, 'value': i} for i in sorted(dff.describe().columns)]
+
+
+@app.callback(Output(_7_dropdown_x, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+    return [{'label': i, 'value': i} for i in sorted(dff.describe().columns)]
+
+
+@app.callback(Output(_7_dropdown_y, 'options'),
+              [Input(_0_table, 'rows')])
+def update_filter_column_options(tablerows):
+    dff = pd.DataFrame(tablerows)  # <- problem! dff stays empty even though table was uploaded
+    print("updating... dff empty?:", dff.empty)  # result is True, labels stay empty
+    return [{'label': i, 'value': i} for i in sorted(dff.describe().columns)]
+
+
+
+@app.callback(
+    Output(component_id=_7_graph, component_property='figure'),
+    [Input(_0_table, 'rows'),
+     Input(_7_dropdown_x, 'value'),
+     Input(_7_dropdown_y, 'value'),
+     Input(_7_dropdown_x_type, 'value'),
+     Input(_7_dropdown_y_type, 'value'),
+     Input(_7_dropdown_input_multi, 'value'),
+     Input(_7_dropdown_clustering_method, 'value'),
+     Input(_7_dropdown_cluster_numbers, 'value'),
+
+     ]
+)
+def update_output_div2(table, x, y, xtype, ytype,multinput,method,cnum):
+    dff = pd.DataFrame(table)
+    dff_limited=dff[multinput]
+    scaled_data=StandardScaler().fit(dff_limited).transform(dff_limited)
+
+    z=cluster(scaled_data,method,int(cnum))
+
+
+
+    trace = go.Scatter(
+        x=dff[x],
+        y=dff[y],
+        mode='markers',
+        marker=dict(
+            size=12,
+            color=z,  # set color equal to a variable
+            colorscale='Viridis',
+            showscale=True
+        )
+    )
+    data = [trace]
+    figure = {
+        'data': data,
+        'layout': {
+            'title': 'Dash Data Visualization'
+            # ,'barmode':'stack'
+            , 'xaxis': dict(
+                type=xtype,
+                title=x,
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f',
+
+                )
+            )
+            , 'yaxis': dict(
+                type=ytype,
+                title=y,
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                )
+            )
+
+        },
+    }
+    return figure
+
 # </editor-fold>
+
+# </editor-fold>
+
+
+external_css = [
+    "https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css",  # Normalize the CSS
+    "https://fonts.googleapis.com/css?family=Open+Sans|Roboto"  # Fonts
+    "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "https://cdn.rawgit.com/TahiriNadia/styles/faf8c1c3/stylesheet.css",
+    "https://cdn.rawgit.com/TahiriNadia/styles/b1026938/custum-styles_phyloapp.css"
+]
+for css in external_css:
+    app.css.append_css({"external_url": css})
 
 
 

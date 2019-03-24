@@ -2,7 +2,7 @@
 
 ## Motivation
 
-This webpage is a case example of data sciense dashbord that we intended to develop it further, but it got to a point that we decided to make it open source.  
+This webpage is a case example of data science dashboard that we intended to develop it further, but it got to a point that we decided to make it open source, for learning purposes.  
 
 ## Usage example
 
